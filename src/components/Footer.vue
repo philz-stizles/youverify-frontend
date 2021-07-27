@@ -1,9 +1,11 @@
 <template>
-  <h1>About</h1>
+  <h1></h1>
 </template>
 
 <script>
-  export default {}
+  export default {
+    name: 'Footer',
+  }
 </script>
 
 <style></style>
