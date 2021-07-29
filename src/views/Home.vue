@@ -1,34 +1,35 @@
 <template>
   <div class="home">
-    <h1>Home</h1>
+    <Categories />
+    <div class="px-10 flex flex-row justify-between items-center">
+      <SectionTitle title="TOP HEADLINES" />
+      <SearchInput />
+    </div>
+    <ArticleList :articles="articles" />
   </div>
 </template>
 
 <script>
   // @ is an alias to /src
-  import axios from 'axios'
+  // import axios from 'axios'
+  import SectionTitle from '@/components/SectionTitle.vue'
+  import ArticleList from '@/components/home/ArticleList.vue'
+  import SearchInput from '@/components/SearchInput.vue'
+  import Categories from '@/components/home/Categories.vue'
+  import { mapGetters } from 'vuex'
 
   export default {
     name: 'Home',
-    components: {},
-    data() {
-      console.log(process.env.VUE_APP_NEWS_API)
-      console.log(process.env.VUE_APP_NEWS_API_key)
-      return {
-        url: `${process.env.VUE_APP_NEWS_API}/top-headlines/sources?apiKey=${process.env.VUE_APP_NEWS_API_key}`,
-      }
+    components: { SectionTitle, ArticleList, Categories, SearchInput },
+    computed: {
+      ...mapGetters([
+        'articles',
+        // ...
+      ]),
     },
     mounted() {
-      axios
-        .get(this.url)
-        .then((response) => {
-          console.log(response)
-        })
-        .catch((error) => {
-          console.log(error)
-          this.errored = true
-        })
-        .finally(() => (this.loading = false))
+      // Dispatch an action to fetch news
+      this.$store.dispatch('fetchNews')
     },
   }
 </script>

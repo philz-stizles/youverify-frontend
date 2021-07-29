@@ -1,8 +1,82 @@
-import { createStore } from "vuex";
+import { createStore } from 'vuex'
+import GoogleService from '../services/GoogleService'
+import NewsFeedService from '../services/NewsFeedService'
+import {
+  getArticlesFromStorage,
+  saveArticleToStorage,
+} from '@/utils/article.storage.utils'
 
 export default createStore({
-  state: {},
-  mutations: {},
-  actions: {},
+  state: {
+    userArticles: [],
+    loadingArticles: false,
+    selectedCategory: '',
+    articles: [],
+  },
+  mutations: {
+    loadNewsFeed(state, articles) {
+      state.articles = articles
+    },
+    loadUserArticles(state, userArticles) {
+      state.userArticles = userArticles
+    },
+    saveArticle(state, newArticle) {
+      const userArticles = state.userArticles
+      if (!userArticles.find((article) => article.title === newArticle.title)) {
+        state.userArticles.push(newArticle)
+        saveArticleToStorage(newArticle)
+      }
+    },
+    setCategory(state, selectedCategory) {
+      state.selectedCategory = selectedCategory
+    },
+  },
+  actions: {
+    async fetchNews({ commit, state }) {
+      console.log(state)
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          async (position) => {
+            console.log(position)
+            const geoAddress = await GoogleService.getAddressFromLocation(
+              position.coords.latitude,
+              position.coords.longitude
+            )
+            console.log(geoAddress)
+            const shortName = GoogleService.extractShortName(geoAddress)
+            console.log(shortName)
+            const newsFeeds = await NewsFeedService.getNewsFeedByCountry(
+              shortName,
+              state.selectedCategory
+            )
+            console.log(newsFeeds)
+            commit('loadNewsFeed', newsFeeds.articles)
+          },
+          (error) => {
+            console.log(error.message)
+          }
+        )
+      } else {
+        console.log('download news feed without location')
+      }
+    },
+    loadUserArticles({ commit }) {
+      commit('loadUserArticles', getArticlesFromStorage())
+    },
+  },
+  getters: {
+    articles: (state) => {
+      return state.articles
+    },
+    userArticles: (state) => {
+      return state.userArticles
+    },
+    userArticlesCount: (state) => {
+      return state.userArticles.length
+    },
+    selectedCategory: (state) => {
+      return state.selectedCategory
+    },
+  },
   modules: {},
-});
+})
