@@ -7,7 +7,7 @@ class NewsFeedService {
   async getNewsFeedByCountry(country, category) {
     const categoryQueryParam =
       category.trim() !== '' ? `&category=${category}` : ''
-    const url = `/api/top-headlines?country=${country}${categoryQueryParam}`
+    const url = `/api/v2/top-headlines?country=${country}${categoryQueryParam}`
     // const url = `${this.baseUrl}/top-headlines?country=${country}${categoryQueryParam}`
 
     try {
