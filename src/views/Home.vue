@@ -5,7 +5,8 @@
       <SectionTitle title="TOP HEADLINES" />
       <SearchInput />
     </div>
-    <ArticleList :articles="articles" />
+    <div v-if="!loadingArticles"><ArticleList :articles="articles" /></div>
+    <Loader v-else />
   </div>
 </template>
 
@@ -16,16 +17,20 @@
   import ArticleList from '@/components/home/ArticleList.vue'
   import SearchInput from '@/components/SearchInput.vue'
   import Categories from '@/components/home/Categories.vue'
+  import Loader from '@/components/Loader.vue'
   import { mapGetters } from 'vuex'
 
   export default {
     name: 'Home',
-    components: { SectionTitle, ArticleList, Categories, SearchInput },
+    components: { SectionTitle, ArticleList, Categories, SearchInput, Loader },
     computed: {
       ...mapGetters([
         'articles',
         // ...
       ]),
+      loadingArticles() {
+        return this.$store.state.loadingArticles
+      },
     },
     mounted() {
       // Dispatch an action to fetch news

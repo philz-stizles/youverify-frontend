@@ -37,9 +37,13 @@ export default createStore({
     setCategory(state, selectedCategory) {
       state.selectedCategory = selectedCategory
     },
+    setLoadingArticles(state, loadingArticles) {
+      state.loadingArticles = loadingArticles
+    },
   },
   actions: {
     async fetchNews({ commit, state }) {
+      commit('setLoadingArticles', true)
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           async (position) => {
@@ -53,11 +57,12 @@ export default createStore({
               shortName,
               state.selectedCategory
             )
-
+            commit('setLoadingArticles', false)
             commit('loadNewsFeed', newsFeeds.articles)
           },
           (error) => {
             console.log(error.message)
+            commit('setLoadingArticles', false)
           }
         )
       } else {
@@ -70,7 +75,7 @@ export default createStore({
   },
   getters: {
     articles: (state) => {
-      return state.articles
+      return state.articles.filter((article) => article.urlToImage).slice(0, 4)
     },
     userArticles: (state) => {
       return state.userArticles

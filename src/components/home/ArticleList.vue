@@ -6,7 +6,7 @@
       sm:grid-cols-1
       md:grid-cols-3
       lg:grid-cols-3
-      xl:grid-cols-3
+      xl:grid-cols-4
       gap-5
     "
   >

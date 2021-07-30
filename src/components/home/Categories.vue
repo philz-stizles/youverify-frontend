@@ -3,8 +3,14 @@
     <div v-for="category in categories" :key="category">
       <p
         @click="reloadArticles(category)"
-        class="px-5 uppercase cursor-pointer"
+        :class="
+          selectedCategory === category
+            ? 'uppercase cursor-pointer mx-5 rounded-full px-3 py-1 bg-gray-200'
+            : 'uppercase cursor-pointer mx-5 px-3 py-1'
+        "
       >
+        <!-- class="bg-gray-200 px-3 py-1 uppercase cursor-pointer" -->
+
         {{ category }}
       </p>
     </div>
@@ -37,6 +43,9 @@
     },
     computed: {
       ...mapGetters(['selectedCategory']),
+      selectedCategory() {
+        return this.$store.state.selectedCategory
+      },
     },
   }
 </script>

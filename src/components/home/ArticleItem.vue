@@ -3,15 +3,17 @@
   <div class="rounded overflow-hidden shadow-lg relative">
     <img
       v-if="article.urlToImage"
-      class="w-full"
+      class="w-full object-cover h-48"
       :src="article.urlToImage"
       alt="Mountain"
     />
     <div class="px-6 py-4">
-      <div class="font-bold text-lg mb-2">
-        {{ shortenText(article.title, 100) }}
+      <div class="font-bold text-lg mb-3">
+        {{ shortenText(article.title, 60) }}
       </div>
-      <p class="text-gray-700 text-sm">{{ article.content }}</p>
+      <p class="text-gray-700 text-sm">
+        {{ shortenText(article.content, 120) }}
+      </p>
     </div>
     <div class="px-6 pt-4 pb-2">
       <span
