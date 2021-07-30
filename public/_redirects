@@ -1,3 +1,2 @@
 # Netlify settings for single-page application
 /*    /index.html   200
-/api/*  https://newsapi.org/:splat  200
