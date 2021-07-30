@@ -1,10 +1,15 @@
 import { createStore } from 'vuex'
+import NewsAPI from 'newsapi'
 import GoogleService from '../services/GoogleService'
-import NewsFeedService from '../services/NewsFeedService'
+// import NewsFeedService from '../services/NewsFeedService'
 import {
   getArticlesFromStorage,
   saveArticleToStorage,
 } from '@/utils/article.storage.utils'
+
+const newsapi = new NewsAPI(process.env.VUE_APP_NEWS_API_key, {
+  corsProxyUrl: 'https://cors-anywhere.herokuapp.com/',
+})
 
 export default createStore({
   state: {
@@ -45,12 +50,22 @@ export default createStore({
             console.log(geoAddress)
             const shortName = GoogleService.extractShortName(geoAddress)
             console.log(shortName)
-            const newsFeeds = await NewsFeedService.getNewsFeedByCountry(
-              shortName,
-              state.selectedCategory
-            )
-            console.log(newsFeeds)
-            commit('loadNewsFeed', newsFeeds.articles)
+            // const newsFeeds = await NewsFeedService.getNewsFeedByCountry(
+            //   shortName,
+            //   state.selectedCategory
+            // )
+            newsapi.v2
+              .topHeadlines({
+                category: state.selectedCategory
+                  ? state.selectedCategory
+                  : 'general',
+                country: shortName ? shortName : 'us',
+              })
+              .then((response) => {
+                console.log(response)
+                console.log(response.articles)
+                commit('loadNewsFeed', response.articles)
+              })
           },
           (error) => {
             console.log(error.message)

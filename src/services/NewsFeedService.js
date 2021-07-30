@@ -11,12 +11,7 @@ class NewsFeedService {
     // const url = `${this.baseUrl}/top-headlines?country=${country}${categoryQueryParam}`
 
     try {
-      const response = await axios.get(url, {
-        headers: {
-          // 'Access-Control-Allow-Origin': '*',
-          Authorization: process.env.VUE_APP_NEWS_API_key,
-        },
-      })
+      const response = await axios.get(url)
 
       return response.data
     } catch (error) {
